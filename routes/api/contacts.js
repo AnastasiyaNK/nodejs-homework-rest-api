@@ -71,7 +71,7 @@ router.put("/:contactId", async (req, res, next) => {
 
   const { error } = contactBodySchema.validate(body);
   if (error) {
-    res.status(400).json({ message: error.details[0].message });
+    res.status(400).json({ message: "missing fields" });
     return;
   }
   const updatedContact = await Contact.findByIdAndUpdate(contactIdParam, body, {
@@ -95,7 +95,7 @@ router.patch("/:contactId/favorite", async (req, res, next) => {
 
   const { error } = favoriteBodySchema.validate(body);
   if (error) {
-    res.status(400).json({ message: error.details[0].message });
+    res.status(400).json({ message: "missing field favorite" });
     return;
   }
   const updatedContact = await Contact.findByIdAndUpdate(contactIdParam, body, {
