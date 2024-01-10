@@ -57,7 +57,7 @@ router.delete("/:contactId", async (req, res, next) => {
     res.status(404).json({ message: "Not Found" });
     return;
   }
-  res.status(200).json({ message: "contact deleted", removedContact });
+  res.status(200).json({ message: "contact deleted" });
 });
 
 router.put("/:contactId", async (req, res, next) => {
