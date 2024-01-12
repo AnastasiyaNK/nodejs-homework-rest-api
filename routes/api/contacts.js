@@ -34,11 +34,14 @@ router.get("/:contactId", async (req, res, next) => {
 router.post("/", async (req, res, next) => {
   const body = req.body;
 
+  if (Object.keys(req.body).length === 0) {
+    res.status(400).json({ message: "missing fields" });
+    return;
+  }
+
   const { error } = contactBodySchema.validate(body);
   if (error) {
-    res
-      .status(400)
-      .json({ message: `missing required ${error.details[0].path[0]} field` });
+    res.status(400).json({ message: error.details[0].message });
     return;
   }
   const newContact = await Contact.create(body);
@@ -65,6 +68,12 @@ router.delete("/:contactId", async (req, res, next) => {
 router.put("/:contactId", async (req, res, next) => {
   const contactIdParam = req.params.contactId;
   const body = req.body;
+
+  if (Object.keys(req.body).length === 0) {
+    res.status(400).json({ message: "missing fields" });
+    return;
+  }
+
   const isValidId = isValidObjectId(contactIdParam);
   if (!isValidId) {
     res.status(400).json({ message: `${contactIdParam} isn't a valid id!` });
@@ -73,7 +82,7 @@ router.put("/:contactId", async (req, res, next) => {
 
   const { error } = contactBodySchema.validate(body);
   if (error) {
-    res.status(400).json({ message: "missing fields" });
+    res.status(400).json({ message: error.details[0].message });
     return;
   }
   const updatedContact = await Contact.findByIdAndUpdate(contactIdParam, body, {
@@ -89,6 +98,12 @@ router.put("/:contactId", async (req, res, next) => {
 router.patch("/:contactId/favorite", async (req, res, next) => {
   const contactIdParam = req.params.contactId;
   const body = req.body;
+
+  if (Object.keys(req.body).length === 0) {
+    res.status(400).json({ message: "missing fields" });
+    return;
+  }
+
   const isValidId = isValidObjectId(contactIdParam);
   if (!isValidId) {
     res.status(400).json({ message: `${contactIdParam} isn't a valid id!` });
@@ -97,7 +112,7 @@ router.patch("/:contactId/favorite", async (req, res, next) => {
 
   const { error } = favoriteBodySchema.validate(body);
   if (error) {
-    res.status(400).json({ message: "missing field favorite" });
+    res.status(400).json({ message: error.details[0].message });
     return;
   }
   const updatedContact = await Contact.findByIdAndUpdate(contactIdParam, body, {
